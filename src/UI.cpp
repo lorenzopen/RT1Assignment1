@@ -23,12 +23,18 @@ int main(int argc, char **argv){
 	ros::Publisher turtle1_pub = node1.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel", 10);
 	ros::Publisher turtle2_pub = node1.advertise<geometry_msgs::Twist>("/turtle2/cmd_vel", 10);
 	ros::Rate rate(1); 
-	std::string turtlechoice;
+	int turtlechoice;
 	float lin_vel, ang_vel;
 	while (ros::ok()) {
 		
-		std::cout << "Select a turtle to move: turtle1 or turle2" << std::endl;
+		std::cout << "Select a turtle to move: " << std::endl;
+		std::cout << "1. turtle1 " << std::endl;
+		std::cout << "2. turtle2 " << std::endl;
+		std::cout << "3. quit " << std::endl;
 		std::cin >> turtlechoice;
+		
+		if (turtlechoice == 3){break;}
+		
 		std::cout << "Enter linear velocity: ";
 		std::cin >> lin_vel;
 		std::cout << "Enter angular velocity: "; 
@@ -39,23 +45,22 @@ int main(int argc, char **argv){
 	        vel_msg.linear.x = lin_vel;
 	        vel_msg.angular.z = ang_vel;
 
-	        if (turtlechoice == "turtle1") {
+	        if (turtlechoice == 1) {
 	            turtle1_pub.publish(vel_msg);
-	        } else if (turtlechoice == "turtle2") {
-	            turtle2_pub.publish(vel_msg);
+	        } else if (turtlechoice == 2) {
+	            turtle2_pub.publish(vel_msg);	        
 	        } else {
 	            ROS_WARN("Invalid turtle name! Enter 'turtle1' or 'turtle2'.");
-	            
-        	}
+	     	}
         
         	ros::Duration(1.0).sleep();
         
         	vel_msg.linear.x = 0.0;
 		vel_msg.angular.z = 0.0;
 	
-		if (turtlechoice == "turtle1") {
+		if (turtlechoice == 1) {
 	            turtle1_pub.publish(vel_msg);
-	        } else if (turtlechoice == "turtle2") {
+	        } else if (turtlechoice == 2) {
 	            turtle2_pub.publish(vel_msg);
 	        }
 	}
