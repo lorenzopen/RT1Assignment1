@@ -136,6 +136,7 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/assignment1_rt_node.cpp)
 
 add_executable(node1 src/UI.cpp)
+add_executable(node2 src/Distance.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -153,6 +154,8 @@ add_executable(node1 src/UI.cpp)
 # )
 
 target_link_libraries(node1   ${catkin_LIBRARIES} )
+target_link_libraries(node2   ${catkin_LIBRARIES} )
+
 
 #############
 ## Install ##
