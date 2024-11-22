@@ -4,19 +4,53 @@
 #include "geometry_msgs/Twist.h"
 
 
-double turtle1_posex,turtle1_posey;
-double turtle2_posex,turtle2_posey;
-
+double turtle1_posex, turtle1_posey, turtle1_theta;
+double turtle2_posex, turtle2_posey, turtle2_theta;
 
 void turtle1PoseCallback(const turtlesim::Pose::ConstPtr& msg){
-	turtle1_posex = msg->x;
-	turtle1_posey = msg->y;
+    turtle1_posex = msg->x;
+    turtle1_posey = msg->y;
+    turtle1_theta = msg->theta;
 }
 
-
 void turtle2PoseCallback(const turtlesim::Pose::ConstPtr& msg){
-	turtle2_posex = msg->x;
-	turtle2_posey = msg->y;
+    turtle2_posex = msg->x;
+    turtle2_posey = msg->y;
+    turtle2_theta = msg->theta;
+}
+
+double InvertVelIfTurtleFlipped(double theta, double min_Ang, double max_Ang){
+	if(theta > min_Ang && theta < max_Ang){ return 0.3; }
+	else{ return -0.3; }	
+}
+
+void moveBackToSafeZone(double& pos_x, double& pos_y, double& theta, ros::Publisher &pub, double boundary_min, double boundary_max) {
+    geometry_msgs::Twist vel_msg;
+    bool is_out_of_bounds = false;
+   
+
+    if (pos_y < boundary_min) {
+    	vel_msg.linear.x = InvertVelIfTurtleFlipped(theta, 0.0, 3.14);
+        is_out_of_bounds = true;
+    }
+    else if (pos_x < boundary_min) {
+    	vel_msg.linear.x = InvertVelIfTurtleFlipped(theta, -1.57, 1.57);
+        is_out_of_bounds = true;
+    }
+    else if (pos_x > boundary_max) {
+    	vel_msg.linear.x = InvertVelIfTurtleFlipped(theta, 1.57, -1.57);
+        is_out_of_bounds = true;
+    }
+    else if (pos_y > boundary_max) {
+        vel_msg.linear.x = InvertVelIfTurtleFlipped(theta, 3.14, 0.0);
+        is_out_of_bounds = true;
+    }
+
+    if (is_out_of_bounds) {
+        vel_msg.angular.z = 0.0;
+        pub.publish(vel_msg);
+        ros::Duration(1.0).sleep();
+    }
 }
 
 
@@ -56,22 +90,9 @@ int main(int argc, char **argv){
 			
 		}
 		
-		if (turtle1_posex < 1.0 || turtle1_posey < 1.0 || turtle1_posex > 10.0 || turtle1_posey > 10.0) {
-			
-			vel_msg.linear.x = 0.0;
-			vel_msg.angular.z = 0.0;
-			
-			turtle1_pub.publish(vel_msg);	
-		}
-		
-		if (turtle2_posex < 1.0 || turtle2_posey < 1.0 || turtle2_posex > 10.0 || turtle2_posey > 10.0){
-		
-			vel_msg.linear.x = 0.0;
-			vel_msg.angular.z = 0.0;
-			
-			turtle2_pub.publish(vel_msg);
-			
-		}
+		moveBackToSafeZone(turtle1_posex, turtle1_posey, turtle1_theta, turtle1_pub, 1.0, 10.0);
+       	moveBackToSafeZone(turtle2_posex, turtle2_posey, turtle2_theta, turtle2_pub, 1.0, 10.0);
+
 		
 		rate.sleep();
 	

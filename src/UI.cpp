@@ -12,8 +12,8 @@ int main(int argc, char **argv){
 
 	turtlesim::Spawn turtle2;
 
-	turtle2.request.x = 1.0;
-	turtle2.request.y = 1.0;
+	turtle2.request.x = 3.0;
+	turtle2.request.y = 3.0;
 	turtle2.request.theta = 0.0;
 
 	turtle2.request.name = "turtle2";
