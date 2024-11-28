@@ -82,6 +82,12 @@ int main(int argc, char **argv){
 			
 		if (distance <= 1.0){
 		
+			vel_msg.linear.x= -0.1;
+			turtle1_pub.publish(vel_msg);
+			turtle2_pub.publish(vel_msg);
+			
+			ros::Duration(1.0).sleep();
+			
 			vel_msg.linear.x = 0.0;
 			vel_msg.angular.z = 0.0;
 			
