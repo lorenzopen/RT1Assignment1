@@ -22,10 +22,18 @@ Distance.cpp
     
 How to Use
 
-    - Start the ROS node and the turtlesim simulation.
-    - Run the UI.cpp by using rosrun assignment1_rt node1
-    - Run the Distance.cpp by using rosrun assignment1_rt node2
-    - check the distance published rostopic echo /turtledistance
+    To get started open the ROS workspace, move in the src directory and clone the repository with the repo url :
+    
+	-git clone <repo-url>
+
+        Then:
+    - launch roscore and the turtlesim simulation.
+    - Run the UI.cpp by using 
+                rosrun assignment1_rt node1
+    - Run the Distance.cpp by using 
+                rosrun assignment1_rt node2
+    - check the distance published
+                rostopic echo /turtledistance
     
     Options will be shown in the terminal for:
         Select the turtle to control.
